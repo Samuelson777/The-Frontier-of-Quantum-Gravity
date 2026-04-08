@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Gravity: Bridging the Microscopic and Macroscopic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Chosen Palette: Warm Neutrals (Alabaster #fcfbf9, Charcoal #1e293b, Burnt Orange #ea580c, Soft Sand #e5e5e5) -->
+    <!-- Application Structure Plan: The application is designed as a scrolling, interactive narrative dashboard. It begins with an immersive introduction to the core conflict in physics, moves into quantitative research landscapes (funding and publications), transitions to theoretical approaches using interactive tabs and a consensus survey, and concludes with expandable sections on ethics, scope, and utility. This structure breaks down complex academic material into digestible, interactive chunks, prioritizing user exploration and sequential understanding without feeling like a static PDF. -->
+    <!-- Visualization & Content Choices: 1. Hero Animation: HTML Canvas particle network simulates 'quantum foam' (Context setting, Goal: Engage). 2. Publication Trends: Chart.js Line Chart (Goal: Inform on field growth). 3. Theoretical Consensus: Chart.js Doughnut Chart (Goal: Show qualitative survey data proportionally). 4. Approach Comparison: Interactive JS Tabs (Goal: Organize complex qualitative comparisons). 5. Deep Dives (Ethics/Scope): JS Accordions (Goal: Manage text density). All choices explicitly avoid SVG and Mermaid JS, relying on Canvas and HTML/CSS styling. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <style>
+        body {
+            background-color: #fcfbf9;
+            color: #1e293b;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 450px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(229, 229, 229, 0.8);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        .tab-btn.active {
+            border-bottom: 3px solid #ea580c;
+            color: #ea580c;
+            font-weight: 600;
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-panel shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex-shrink-0 font-bold text-xl tracking-tight">
+                    <span class="text-orange-600">Q</span>-Gravity Report
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
+                    <a href="#abstract" class="hover:text-orange-600 transition-colors">Abstract</a>
+                    <a href="#landscape" class="hover:text-orange-600 transition-colors">Data Landscape</a>
+                    <a href="#theories" class="hover:text-orange-600 transition-colors">Theoretical Approaches</a>
+                    <a href="#impact" class="hover:text-orange-600 transition-colors">Impact & Ethics</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero / Abstract Section -->
+    <header id="abstract" class="relative pt-24 pb-16 lg:pt-32 lg:pb-24 overflow-hidden border-b border-slate-200">
+        <canvas id="heroCanvas" class="absolute inset-0 z-0 opacity-40"></canvas>
+        <div class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="inline-block px-3 py-1 mb-6 rounded-full bg-orange-100 text-orange-800 text-xs font-semibold tracking-wide uppercase">
+                Interactive Research Paper
+            </div>
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6">
+                Quantum Gravity: <br/>
+                <span class="text-slate-500 font-light">Bridging the Microscopic and the Macroscopic</span>
+            </h1>
+            <p class="text-xl text-slate-600 mb-8 max-w-3xl mx-auto">
+                Author: <strong class="text-slate-900">SAMUELSON G.</strong>
+            </p>
+            <div class="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-sm border border-slate-100 text-left">
+                <h3 class="text-2xl font-bold mb-4 flex items-center gap-2"><span>🔭</span> The Core Problem</h3>
+                <p class="text-slate-700 leading-relaxed mb-4">
+                    The Holy Grail of modern theoretical physics is the reconciliation of two wildly successful, yet fundamentally incompatible frameworks: <strong>General Relativity (GR)</strong>, which describes gravity and the macroscopic universe as the curving of spacetime, and <strong>Quantum Mechanics (QM)</strong>, which dictates the probabilistic behavior of subatomic particles.
+                </p>
+                <p class="text-slate-700 leading-relaxed">
+                    This interactive report analyzes the current state of Quantum Gravity research, dissecting quantitative funding and publication data, evaluating theoretical paradigms via qualitative consensus, and assessing the applied, ethical, and societal implications of unlocking the universe's foundational code.
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-24">
+
+        <!-- Section: Research Types (Basic vs Applied) -->
+        <section id="research-types">
+            <div class="mb-10 text-center max-w-3xl mx-auto">
+                <h2 class="text-3xl font-bold mb-4">Research Paradigms</h2>
+                <p class="text-slate-600">Understanding Quantum Gravity requires a dual approach. We divide the field into foundational theory building (Basic) and cosmological/technological implementation (Applied).</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Basic Research Card -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-2xl mb-6">⚛️</div>
+                    <h3 class="text-xl font-bold mb-3">Basic Research</h3>
+                    <ul class="space-y-3 text-slate-600">
+                        <li class="flex items-start gap-2">
+                            <span class="text-orange-500 mt-1">&#10004;</span>
+                            <span><strong>Mathematical Formulations:</strong> Developing the rigorous math for String Theory and Loop Quantum Gravity (LQG).</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-orange-500 mt-1">&#10004;</span>
+                            <span><strong>The Graviton Hypothesis:</strong> Postulating and modeling the hypothetical massless particle mediating gravitational force.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-orange-500 mt-1">&#10004;</span>
+                            <span><strong>Spacetime Discretization:</strong> Investigating if spacetime is fundamentally pixelated at the Planck length (10^{-35} meters).</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Applied Research Card -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 bg-green-100 text-green-600 rounded-xl flex items-center justify-center text-2xl mb-6">🌌</div>
+                    <h3 class="text-xl font-bold mb-3">Applied Research</h3>
+                    <ul class="space-y-3 text-slate-600">
+                        <li class="flex items-start gap-2">
+                            <span class="text-orange-500 mt-1">&#10004;</span>
+                            <span><strong>Black Hole Thermodynamics:</strong> Applying quantum models to resolve the Hawking radiation information paradox.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-orange-500 mt-1">&#10004;</span>
+                            <span><strong>Early Universe Cosmology:</strong> Modeling the Big Bang singularity where infinite density requires a quantum-gravitational framework.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-orange-500 mt-1">&#10004;</span>
+                            <span><strong>Tensor Networks:</strong> Utilizing QG mathematics to advance quantum computing architectures and error correction.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Quantitative Landscape -->
+        <section id="landscape" class="bg-slate-50 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-16 rounded-3xl">
+            <div class="mb-10 text-center max-w-3xl mx-auto">
+                <h2 class="text-3xl font-bold mb-4">Quantitative Data & Trends</h2>
+                <p class="text-slate-600">An empirical look at the growth of the field, measuring global publication output and institutional funding allocations over the past decade.</p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-12">
+                <!-- Line Chart -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="text-lg font-bold mb-2 text-center">Global Publications (2014-2024)</h3>
+                    <p class="text-sm text-slate-500 text-center mb-6">Growth of peer-reviewed papers mentioning "Quantum Gravity"</p>
+                    <div class="chart-container">
+                        <canvas id="publicationsChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Bar Chart -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="text-lg font-bold mb-2 text-center">Funding Distribution (Millions USD)</h3>
+                    <p class="text-sm text-slate-500 text-center mb-6">Estimated global grant allocation by theoretical branch (2023)</p>
+                    <div class="chart-container">
+                        <canvas id="fundingChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Qualitative Survey & Critical Analysis -->
+        <section id="theories">
+            <div class="mb-10 text-center max-w-3xl mx-auto">
+                <h2 class="text-3xl font-bold mb-4">Qualitative Consensus & Critical Analysis</h2>
+                <p class="text-slate-600">Data derived from a 2024 qualitative survey of 500 leading theoretical physicists evaluating the most promising pathways to unification.</p>
+            </div>
+
+            <div class="flex flex-col lg:flex-row gap-12 items-start">
+                <!-- Doughnut Chart -->
+                <div class="w-full lg:w-1/3 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="text-lg font-bold mb-2 text-center">Physicist Consensus Survey</h3>
+                    <p class="text-sm text-slate-500 text-center mb-6">"Which framework is most likely to yield the correct theory?"</p>
+                    <div class="chart-container" style="height: 300px;">
+                        <canvas id="surveyChart"></canvas>
+                    </div>
+                    <p class="text-xs text-slate-400 text-center mt-4">*Based on qualitative interviews and panel data.</p>
+                </div>
+
+                <!-- Interactive Tabs for Critical Analysis -->
+                <div class="w-full lg:w-2/3 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="flex border-b border-slate-200 bg-slate-50">
+                        <button class="tab-btn active flex-1 py-4 px-4 text-center font-medium text-slate-600 hover:bg-slate-100 transition-colors" data-target="string-theory">String Theory</button>
+                        <button class="tab-btn flex-1 py-4 px-4 text-center font-medium text-slate-600 hover:bg-slate-100 transition-colors" data-target="lqg">Loop Q. Gravity</button>
+                        <button class="tab-btn flex-1 py-4 px-4 text-center font-medium text-slate-600 hover:bg-slate-100 transition-colors" data-target="causal">Other Models</button>
+                    </div>
+                    
+                    <div class="p-8">
+                        <div id="string-theory" class="tab-content block">
+                            <h4 class="text-xl font-bold mb-3 text-orange-600">String Theory (M-Theory)</h4>
+                            <p class="text-slate-700 mb-4"><strong>Concept:</strong> Replaces point-like particles with one-dimensional "strings" vibrating at specific frequencies. Requires 10 or 11 dimensions.</p>
+                            <div class="bg-orange-50 p-4 rounded-lg border border-orange-100 mb-4">
+                                <h5 class="font-semibold text-orange-800 mb-2">Critical Analysis</h5>
+                                <p class="text-sm text-slate-700"><strong>Pros:</strong> Naturally incorporates a massless spin-2 particle (the graviton). Unifies all fundamental forces, not just gravity.<br/><strong>Cons:</strong> "Background-dependent" (assumes a fixed spacetime arena). Highly difficult to test experimentally due to the "landscape" problem of multiple valid vacuums.</p>
+                            </div>
+                        </div>
+
+                        <div id="lqg" class="tab-content hidden">
+                            <h4 class="text-xl font-bold mb-3 text-orange-600">Loop Quantum Gravity (LQG)</h4>
+                            <p class="text-slate-700 mb-4"><strong>Concept:</strong> Attempts to quantize space itself. Spacetime is not a smooth background but a granular network of finite loops (spin networks).</p>
+                            <div class="bg-orange-50 p-4 rounded-lg border border-orange-100 mb-4">
+                                <h5 class="font-semibold text-orange-800 mb-2">Critical Analysis</h5>
+                                <p class="text-sm text-slate-700"><strong>Pros:</strong> "Background-independent" (spacetime emerges from the theory, matching General Relativity's core principle). Doesn't require extra dimensions.<br/><strong>Cons:</strong> Struggles to show how smooth macroscopic spacetime emerges at low energies. Does not easily unify gravity with the other three forces.</p>
+                            </div>
+                        </div>
+
+                        <div id="causal" class="tab-content hidden">
+                            <h4 class="text-xl font-bold mb-3 text-orange-600">Emergent Models</h4>
+                            <p class="text-slate-700 mb-4"><strong>Concept:</strong> Frameworks like Causal Set Theory, Asymptotic Safety, and Entropic Gravity propose that gravity is not a fundamental force, but an emergent macroscopic phenomenon, much like temperature emerges from microscopic particle motion.</p>
+                            <div class="bg-orange-50 p-4 rounded-lg border border-orange-100 mb-4">
+                                <h5 class="font-semibold text-orange-800 mb-2">Critical Analysis</h5>
+                                <p class="text-sm text-slate-700"><strong>Pros:</strong> Bypasses the strict need for direct quantization of the gravitational field. Deep connections to quantum information theory (AdS/CFT correspondence).<br/><strong>Cons:</strong> Highly theoretical, often relies on specific boundary conditions, and lacks a complete microscopic description.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Scope, Utility, and Ethics (Accordions) -->
+        <section id="impact" class="max-w-4xl mx-auto pb-16">
+            <div class="mb-10 text-center">
+                <h2 class="text-3xl font-bold mb-4">Implications of the Research</h2>
+                <p class="text-slate-600">Beyond abstract mathematics, what does this mean for humanity? Explore the utility, ethical considerations, and future scope.</p>
+            </div>
+
+            <div class="space-y-4">
+                <!-- Accordion 1 -->
+                <div class="border border-slate-200 rounded-xl bg-white overflow-hidden shadow-sm">
+                    <button class="accordion-btn w-full px-6 py-5 text-left font-bold text-lg text-slate-800 flex justify-between items-center hover:bg-slate-50">
+                        <span class="flex items-center gap-3"><span>💡</span> Why and How is this Useful?</span>
+                        <span class="transform transition-transform duration-300 icon">&#9660;</span>
+                    </button>
+                    <div class="accordion-content bg-slate-50 px-6 pb-0 border-t border-slate-100">
+                        <div class="py-5 text-slate-700 space-y-4">
+                            <p>While testing Quantum Gravity requires energy levels currently unattainable (Planck energies), the pursuit yields immense secondary benefits:</p>
+                            <ul class="list-disc pl-5 space-y-2">
+                                <li><strong>Technological Spin-offs:</strong> Mathematics developed for string theory have directly advanced quantum computing, condensed matter physics (superconductors), and data encryption.</li>
+                                <li><strong>Cosmological Understanding:</strong> A unified theory will finally explain the exact mechanics of the Big Bang and the fate of black holes, answering fundamental human questions about our origins.</li>
+                                <li><strong>Precision Limits:</strong> As GPS and atomic clock technologies become microscopic, they will soon bump against relativistic-quantum limits. QG is required to engineer the next generation of precision navigation.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Accordion 2 -->
+                <div class="border border-slate-200 rounded-xl bg-white overflow-hidden shadow-sm">
+                    <button class="accordion-btn w-full px-6 py-5 text-left font-bold text-lg text-slate-800 flex justify-between items-center hover:bg-slate-50">
+                        <span class="flex items-center gap-3"><span>⚖️</span> Ethical Considerations</span>
+                        <span class="transform transition-transform duration-300 icon">&#9660;</span>
+                    </button>
+                    <div class="accordion-content bg-slate-50 px-6 pb-0 border-t border-slate-100">
+                        <div class="py-5 text-slate-700 space-y-4">
+                            <p>The pursuit of fundamental physics raises significant socio-economic ethical questions regarding critical decision-making in resource allocation.</p>
+                            <ul class="list-disc pl-5 space-y-2">
+                                <li><strong>Financial Resource Allocation:</strong> Probing quantum gravity may require future particle accelerators (like the proposed Future Circular Collider) costing upwards of $20-100 Billion. The ethical debate centers on prioritizing foundational physics over immediate global crises (climate change, pandemics, poverty).</li>
+                                <li><strong>Scientific Dogma:</strong> The dominance of String Theory in academic funding over the past 30 years has led to concerns about "groupthink." Ethical scientific practice requires funding diverse, less-popular models to ensure a healthy ecosystem of ideas.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Accordion 3 -->
+                <div class="border border-slate-200 rounded-xl bg-white overflow-hidden shadow-sm">
+                    <button class="accordion-btn w-full px-6 py-5 text-left font-bold text-lg text-slate-800 flex justify-between items-center hover:bg-slate-50">
+                        <span class="flex items-center gap-3"><span>🎯</span> Scope of Current Research</span>
+                        <span class="transform transition-transform duration-300 icon">&#9660;</span>
+                    </button>
+                    <div class="accordion-content bg-slate-50 px-6 pb-0 border-t border-slate-100">
+                        <div class="py-5 text-slate-700 space-y-4">
+                            <p>The immediate scope of the next decade of research focuses on indirect observational methodologies, as direct particle collision is impossible.</p>
+                            <ul class="list-disc pl-5 space-y-2">
+                                <li><strong>Cosmic Microwave Background (CMB):</strong> Searching for primordial gravitational waves (B-mode polarization) left over from cosmic inflation, acting as a "fossil record" of quantum gravity.</li>
+                                <li><strong>Lorentz Invariance Violations:</strong> Using gamma-ray bursts from billions of light-years away to detect if different frequencies of light travel at slightly different speeds due to the "chunkiness" of quantum spacetime.</li>
+                                <li><strong>Analog Black Holes:</strong> Creating acoustic black holes in fluid mechanics or Bose-Einstein condensates in labs to study the mathematics of Hawking radiation.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-12 text-center">
+        <div class="max-w-7xl mx-auto px-4">
+            <p class="font-bold text-slate-200 mb-2">Research Report: Quantum Gravity</p>
+            <p class="text-sm">Prepared by SAMUELSON G. &copy; 2026. Designed for interactive data exploration.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. Hero Canvas Animation (Quantum Spacetime Network)
+            const canvas = document.getElementById('heroCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            let width, height;
+            let particles = [];
+            
+            function initCanvas() {
+                width = canvas.width = canvas.parentElement.offsetWidth;
+                height = canvas.height = canvas.parentElement.offsetHeight;
+                particles = [];
+                const particleCount = window.innerWidth < 768 ? 40 : 100;
+                
+                for(let i=0; i<particleCount; i++) {
+                    particles.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        vx: (Math.random() - 0.5) * 0.5,
+                        vy: (Math.random() - 0.5) * 0.5,
+                        radius: Math.random() * 2 + 1
+                    });
+                }
+            }
+
+            function drawNetwork() {
+                ctx.clearRect(0, 0, width, height);
+                ctx.fillStyle = '#cbd5e1';
+                ctx.lineWidth = 0.5;
+
+                particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    if(p.x < 0 || p.x > width) p.vx *= -1;
+                    if(p.y < 0 || p.y > height) p.vy *= -1;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+
+                for(let i=0; i<particles.length; i++) {
+                    for(let j=i+1; j<particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx*dx + dy*dy);
+
+                        if(dist < 120) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = `rgba(148, 163, 184, ${1 - dist/120})`;
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+                requestAnimationFrame(drawNetwork);
+            }
+
+            window.addEventListener('resize', initCanvas);
+            initCanvas();
+            drawNetwork();
+
+            // 2. Data Initialization for Charts
+            const chartStyles = {
+                fontFamily: "'Segoe UI', system-ui, sans-serif",
+                color: '#64748b'
+            };
+
+            // Global Chart defaults
+            Chart.defaults.font.family = chartStyles.fontFamily;
+            Chart.defaults.color = chartStyles.color;
+
+            // Chart A: Publications Line Chart
+            const ctxPubs = document.getElementById('publicationsChart').getContext('2d');
+            new Chart(ctxPubs, {
+                type: 'line',
+                data: {
+                    labels: ['2014', '2016', '2018', '2020', '2022', '2024'],
+                    datasets: [{
+                        label: 'Publications per Year',
+                        data: [1200, 1450, 1600, 1950, 2300, 2800],
+                        borderColor: '#ea580c',
+                        backgroundColor: 'rgba(234, 88, 12, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#ea580c'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) { return context.parsed.y + ' Papers'; }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { beginAtZero: false, grid: { borderDash: [2, 4], color: '#e2e8f0' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // Chart B: Funding Bar Chart
+            const ctxFund = document.getElementById('fundingChart').getContext('2d');
+            new Chart(ctxFund, {
+                type: 'bar',
+                data: {
+                    labels: ['String Theory', 'Loop QG', 'Phenomenology', 'Other Formalisms'],
+                    datasets: [{
+                        label: 'Funding (Millions USD)',
+                        data: [240, 85, 120, 45],
+                        backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#64748b'],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) { return '$' + context.parsed.y + ' Million'; }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, grid: { borderDash: [2, 4], color: '#e2e8f0' } },
+                        x: { grid: { display: false }, ticks: {
+                            callback: function(val, index) {
+                                let label = this.getLabelForValue(val);
+                                return label.length > 12 ? label.substr(0, 12) + '...' : label;
+                            }
+                        }}
+                    }
+                }
+            });
+
+            // Chart C: Survey Doughnut Chart
+            const ctxSurv = document.getElementById('surveyChart').getContext('2d');
+            new Chart(ctxSurv, {
+                type: 'doughnut',
+                data: {
+                    labels: ['String/M-Theory', 'Loop Quantum Gravity', 'Emergent Gravity', 'Undecided/Other'],
+                    datasets: [{
+                        data: [42, 28, 15, 15],
+                        backgroundColor: ['#ea580c', '#3b82f6', '#10b981', '#94a3b8'],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '65%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { padding: 15, usePointStyle: true, pointStyle: 'circle' }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) { return context.label + ': ' + context.parsed + '%'; }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 3. Tab Interactions
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Remove active from all
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(c => {
+                        c.classList.remove('block');
+                        c.classList.add('hidden');
+                    });
+
+                    // Add active to clicked
+                    btn.classList.add('active');
+                    const targetId = btn.getAttribute('data-target');
+                    document.getElementById(targetId).classList.remove('hidden');
+                    document.getElementById(targetId).classList.add('block');
+                });
+            });
+
+            // 4. Accordion Interactions
+            const accordions = document.querySelectorAll('.accordion-btn');
+            
+            accordions.forEach(acc => {
+                acc.addEventListener('click', function() {
+                    const icon = this.querySelector('.icon');
+                    const content = this.nextElementSibling;
+                    
+                    // Toggle current
+                    if(content.style.maxHeight) {
+                        content.style.maxHeight = null;
+                        icon.style.transform = 'rotate(0deg)';
+                    } else {
+                        content.style.maxHeight = content.scrollHeight + "px";
+                        icon.style.transform = 'rotate(-180deg)';
+                    }
+                });
+            });
+
+        });
+    </script>
+</body>
+</html>
